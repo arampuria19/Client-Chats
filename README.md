@@ -11,10 +11,10 @@ commands inside Linux terminal:
 to run the server:
 ``` ./s PORT_NUMBER```
 4. For the second terminal get the first client running using the following:
-```./c IP_ADDRESS PORT_NUMBER```
-5. For the third terminal get the second client running using the following:
-```./c IP_ADDRESS PORT_NUMBER```
-6. The following commands are valid when no connection has been established (on the
+5. ```./c IP_ADDRESS PORT_NUMBER```
+6. For the third terminal get the second client running using the following:
+7. ```./c IP_ADDRESS PORT_NUMBER```
+8. The following commands are valid when no connection has been established (on the
 client-side):
 a. GET (Used for printing the list of all the client-ids connected to
 the server along with their status - FREE or BUSY). FREE status is
