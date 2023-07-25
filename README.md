@@ -2,10 +2,11 @@
 This is a client server based chat application. It is implementation of a chat server using TCP socket. The server will ensure smooth connection between a pair of clients. A client can talk to another client during a session if the requested client is free. The list of connected clients (with the server) with status (BUSY, FREE, etc.) should be shown to a requesting client. The client sends a match request to the server and depending on the availability of the requested client, a separate communication channel may be established between the clients.The chat session can be ended from any side of both clients by sending a goodbye message. The other side is bound to close the chat session upon receiving the goodbye message. But, both the clients remain active in the server’s list and can start chatting on a different session. Only close command from a client terminates a connection between the client and the server. The server runs forever.
 
 <h2> Execution Procedure </h2>
-1. Compile the server.cpp and client.cpp programs on your PC by typing the following
+<li> Compile the server.cpp and client.cpp programs on your PC by typing the following
 commands inside Linux terminal:
 ``` g++ server.cpp -o s -lpthread```
-```g++ client.cpp -o c -lpthread```
+```g++ client.cpp -o c -lpthread``` 
+</li>
 2. Open up multiple terminals in your system. (Let’s say 3)
 3. For the first terminal, get the server started up and running. Use the following command
 to run the server:
