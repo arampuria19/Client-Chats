@@ -13,9 +13,9 @@ to run the server: ` ./s PORT_NUMBER` </li>
 <li>For the second terminal get the first client running using the following:  `./c IP_ADDRESS PORT_NUMBER`</li>
 <li>For the third terminal get the second client running using the following:  `./c IP_ADDRESS PORT_NUMBER`</li> 
 <li>The following commands are valid when no connection has been established (on the client-side):
-- GET (Used for printing the list of all the client-ids connected to the server along with their status - FREE or BUSY). FREE status is displayed for the client who is connected to the server, but not
+* GET (Used for printing the list of all the client-ids connected to the server along with their status - FREE or BUSY). FREE status is displayed for the client who is connected to the server, but not
 connected to some other client for chatting. BUSY status is displayed for the client who is connected to the server and chatting with someone else. 
-- CONNECT <Client_ID> (It is used to connect the current client with another client who is having FREE status).
+* CONNECT <Client_ID> (It is used to connect the current client with another client who is having FREE status).
 </li>
 <li>After the two clients are connected, directly type in the messages that you want to send to the other client and the same can be done from the other side. (Note: You cannot send a message if you are not connected to some client/until your status is FREE). </li> 
 <li>In order to end the chatting/ connection with the other client, type #GOODBYE# command inside the client terminal. This results in the disconnection of the two clients.
