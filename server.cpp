@@ -15,32 +15,25 @@ int partner[MAX];
 pthread_mutex_t mylock = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t qlock = PTHREAD_MUTEX_INITIALIZER;
 
-class server
-{
+class server{
     public:
-	
 	// Member variables
 	int port, sockfd, connectid, bindid, listenid, connfd;
 	struct sockaddr_in serv_addr, cli_addr;
-	
 	// Constructor
-	server()
-	{
+	server(){
 		memset(status, -1, sizeof(status));
 		memset(partner, -1, sizeof(partner));
 	}
-
+	
 	// Member Functions
-	void getPort(char* argv[])
-	{
+	void getPort(char* argv[]){
 		port = atoi(argv[1]);
 	}
 	
-	void socketNumber()
-	{
+	void socketNumber(){
 		sockfd = socket(AF_INET, SOCK_STREAM, 0);
-		if(sockfd < 0) 
-    	{
+		if(sockfd < 0) {
     		cout << "Client Socket Creation Failed..exiting" << endl;
     		exit(0);
     	}
@@ -48,16 +41,14 @@ class server
     		cout << "Client Socket was successfully created" << endl;
 	}
 
-    void socketBind()
-    {
+    void socketBind(){
         bzero((sockaddr_in *) &serv_addr, sizeof(serv_addr));
         serv_addr.sin_family = AF_INET ;
         serv_addr.sin_addr.s_addr = htons(INADDR_ANY);
         serv_addr.sin_port = htons(port);
-        
+        // Binding the socket to the local address
         bindid = bind(sockfd, (struct sockaddr*) &serv_addr, sizeof(serv_addr));
-        if(bindid < 0)
-        { 
+        if(bindid < 0){ 
             cout << "server socket bind failed." << endl;
             exit(0);
         }
@@ -65,11 +56,9 @@ class server
             cout << "Server binded successfully." << endl;
     }
 
-    void serverListen()
-    {
+    void serverListen(){
         listenid = listen(sockfd, 20);
-        if(listenid != 0)
-        {
+        if(listenid != 0){
             cout << "server listen failed." << endl;
             exit(0);
         }
@@ -77,12 +66,10 @@ class server
             cout << "server is listening." << endl;
     }
 
-    void acceptClient()
-    {
+    void acceptClient(){
         socklen_t clilen = sizeof(cli_addr);
         connfd = accept(sockfd, (struct sockaddr *) &cli_addr, &clilen);
-        if (connfd < 0) 
-    	{
+        if (connfd < 0) {
         	printf("server accept failed...\n");
         	exit(0);
     	}
@@ -90,48 +77,39 @@ class server
         	printf("server-client connection established. !!\n");
     }
 
-    string readClient(int a)
-	{	
+    // Start reading message
+    string readClient(int a){	
 		// Read from the server 
 		char ip[MAX];
 		bzero(ip, sizeof(ip));
-		
-		read(a, ip, 8 * sizeof(ip));
-		
+		read(a, ip, 8 * sizeof(ip));	
 		string ans(ip);
 		return ans;
 	}
 
-    void writeClient(string s, int a)
-	{
+    void writeClient(string s, int a){
 		// Write back to the server
 		char *ptr = &s[0];
 		write(a, ptr, 8 * sizeof(s));
 	}
 
-    void closeServer(int a)
-    {
+    void closeServer(int a){
         close(a);
     }
 } s; 
 
-void sHandler(int signum) 
-{
-	for(int i=0; i<MAX; i++)
-	{
-		if(status[i] != -1)
-		{
+void sHandler(int signum) {
+	for(int i=0; i<MAX; i++){
+		if(status[i] != -1){
 			s.writeClient("OUTAGE", i);
 		}
 	}
     exit(signum);  
 }
 
-string encoding(int connfd)
-{
+string encoding(int connfd){
 	string encode = "";
-	for(int i=0; i<MAX; i++)
-	{
+	for(int i=0; i<MAX; i++){
 		if(status[i] == 0)
 			encode = encode + "0 "; // FREE
 		else if(status[i] == 1)
@@ -142,13 +120,11 @@ string encoding(int connfd)
 	return encode;
 }
 
-void logs(string s, int connfd)
-{
+void logs(string s, int connfd){
 	cout << "Client ID " << connfd << " requested for " << s << " command" << endl;
 }
 
-string parseMessage(string s)
-{
+string parseMessage(string s){
 	stringstream ss(s);
 	char delim = ' ';
 	string item;
@@ -161,8 +137,7 @@ string parseMessage(string s)
 	return ans;
 }
 
-void *handler(void *arg)
-{
+void *handler(void *arg){
 	pthread_mutex_lock(&qlock);
 	int connfd = clients.front();
 	clients.pop();
@@ -170,10 +145,8 @@ void *handler(void *arg)
 	
 	int flag = 0;
 	
-	while(1)
-	{
-		if(flag == 0)
-		{
+	while(1){
+		if(flag == 0){
 			cout << "Client ID " << connfd << " joined" << endl;
 			cout << string(50, '-') << endl;
 			flag = 1;
@@ -185,15 +158,13 @@ void *handler(void *arg)
 
 		pthread_mutex_lock(&mylock);
 		cout << "Handler Locked using Mutex" << endl;
-		if(client.compare("#CLOSE#") == 0)
-		{
+		if(client.compare("#CLOSE#") == 0){
 			s.writeClient("ABORT", connfd);
 			cout << "Client ID " << connfd <<" exits" << endl;
 			
 			// When does the disconnection happens ?
 
-			if(status[connfd] == 1)
-			{
+			if(status[connfd] == 1){
 				// Disconnect the client (Critical Section?)
 				int connfd2 = partner[connfd];
 				status[connfd] = -1;
