@@ -173,11 +173,11 @@ void *handler(void *arg){
 				partner[connfd] = -1;
 				s.writeClient("TERMINATED", connfd2);
 			}
-			else 
-			{
+			else{
 				status[connfd] = -1; // Disconnected from the server
 				partner[connfd] = -1;
 			}
+			
 			s.closeServer(connfd);
 			cout << "Handler unlocked using Mutex" << endl;
 			cout << string(50, '-') << endl;
@@ -186,10 +186,8 @@ void *handler(void *arg){
 			return NULL;
 		}
 
-		if(status[connfd] == 1)
-		{
-			if(client == "#GOODBYE#")
-			{
+		if(status[connfd] == 1){
+			if(client == "#GOODBYE#"){
 				// Disconnect the client (Critical Section?)
 				
 				int connfd2 = partner[connfd];
@@ -202,8 +200,7 @@ void *handler(void *arg){
 				s.writeClient("TERMINATED", connfd);
 				s.writeClient("TERMINATED", connfd2);
 			}
-			else 
-			{
+			else {
 				logs("SEND MESSAGE", connfd);
 				s.writeClient("SEND " + client, partner[connfd]);
 			}
@@ -222,8 +219,7 @@ void *handler(void *arg){
 		getline(ss, item, delim);
 		command = item;
 
-		if(command == "GET")
-		{
+		if(command == "GET"){
 			// Format: GET
 			logs(command, connfd);
 
@@ -231,11 +227,9 @@ void *handler(void *arg){
 			string encode = encoding(connfd);
 			s.writeClient("GET " + encode, connfd);
 		}
-		else if(command == "CONNECT")
-		{
+		else if(command == "CONNECT"){
 			// Format: CONNECT <partner id>
 			logs(command, connfd);
-
 			getline(ss, item, delim);
 			int connfd2 = stoi(item);
 			
@@ -247,8 +241,7 @@ void *handler(void *arg){
 				s.writeClient("CONNECT BUSY", connfd);
 			else if(status[connfd2] == 1 && partner[connfd2] == connfd)
 				s.writeClient("CONNECT TALK", connfd);
-			else
-			{
+			else{
 				// Make the connection between the two (Critical Section ?)
 				// This means that I have to inform the other client and make it listen
 				status[connfd] = 1;
@@ -264,8 +257,8 @@ void *handler(void *arg){
 				s.writeClient(b, connfd2);
 			}
 		}
-		else
-		{
+
+		else{
 			// Invalid command
 			s.writeClient("INVALID COMMAND", connfd);
 		}
@@ -278,10 +271,8 @@ void *handler(void *arg){
 	pthread_exit(NULL);
 } 
 
-int main(int argc, char* argv[])
-{
-    if(argc < 2)
-    {
+int main(int argc, char* argv[]){
+    if(argc < 2){
         cout << "Error. Port Number is missing." << endl;
         exit(0);
     } 
@@ -291,23 +282,18 @@ int main(int argc, char* argv[])
 
     s.getPort(argv);
     s.socketNumber();
-    if(s.sockfd < 0)
-	    exit(0);   
+    if(s.sockfd < 0) exit(0);   
     s.socketBind();
-    if(s.bindid < 0)
-        exit(0);
+    if(s.bindid < 0) exit(0);
     s.serverListen();
-    if(s.listenid != 0)
-        exit(0);
+    if(s.listenid != 0) exit(0);
 	cout << string(50, '-') << endl;
 
-    while(1)
-    {
+    while(1){
     	// accepting the client
         s.acceptClient();
 
-    	if (s.connfd < 0) 
-        	continue;
+    	if (s.connfd < 0) continue;
         
         clients.push(s.connfd);
     	pthread_t t; 
