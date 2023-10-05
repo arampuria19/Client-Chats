@@ -21,5 +21,6 @@ This is a client server based chat application. It is implementation of a chat s
 
 - In order to end the chatting/ connection with the other client, type #GOODBYE# command inside the client terminal. This results in the disconnection of the two clients.
 
-# Note: The clients still remain connected to the server.
+- Note: The clients still remain connected to the server.
+
 - In order to make a client disconnect from the server, type #CLOSE# command inside the terminal of the respective client. This results in the closing of the connection between client and server. 
