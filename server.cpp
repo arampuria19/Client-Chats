@@ -186,15 +186,16 @@ void *handler(void *arg){
 			pthread_exit(NULL);
 			return NULL;
 		}
-
+		
 		if(status[connfd] == 1){
 			if (client.substr(0,7) == "SECURE:"){
 				string message = client.substr(8);
 				string message_temp = RC4encrypt(message);
+				// int B = stoi(message_temp);
 				logs("SEND MESSAGE", connfd);
 				s.writeClient("SEND "+ message_temp + " [" + message + ']', partner[connfd]);
 			}
-			if(client == "#GOODBYE#"){
+			else if(client == "#GOODBYE#"){
 				// Disconnect the client (Critical Section?)
 				
 				int connfd2 = partner[connfd];

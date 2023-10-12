@@ -127,3 +127,49 @@ string RC4encrypt(string plainText) {
     // std::cout << "\n"; 
     
 }
+
+int mpow(int a,int b,int q){
+    // Binary Exponentiation used to find out pow(a,b) 
+    int ans = 1;
+    a = a%q;
+    while(b>0){
+        if (b&1) ans = (ans*1LL*a)%q;
+        b = b>>1;
+        a = (a*1LL*a)%q;
+    } 
+    return ans;
+}
+
+int findSmallestPrimitiveRoot(int q){
+    int ans = 2;
+    for (int x=2;x<q;x++){
+        set<int> st;
+        for (int power=1;power<q;power++){
+            int y = mpow(x,power,q);
+            if (st.find(y) != st.end()) break;
+            st.insert(y);
+        }
+        if ((int)st.size() == q-1 && (int)(*st.begin()) == 1) {
+            ans = x;
+            break;
+        }
+    }
+    return ans;
+}
+
+pair<bool,int> DiffieHellmanKeyExchange(int Xa,int Xb) {
+    // Choose a random prime number from 2 to 50
+    vector<int> vec = {2,3,5,7,11,13,17,19,23,29,31,37,41,43,47};
+    int idx = (rand())%15;
+    int q=vec[idx];
+    int alpha = findSmallestPrimitiveRoot(q);
+    int Ya = mpow(alpha,Xa,q);
+    int Yb = mpow(alpha,Xb,q);
+    int key1 = mpow(Yb,Xa,q);
+    int key2 = mpow(Ya,Xb,q);
+    if (key1 == key2){
+        return {true,key1};
+    }
+    return {false,key1};
+    // cout << q << " "<< alpha << "\n";
+}

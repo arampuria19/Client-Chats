@@ -7,22 +7,13 @@
 #include <semaphore.h>
 using namespace std;
 #define MAX 1000
-
+#include "Src_Code.cpp"
 // color encoding
 #define RED "\033[31m" 
 #define RESET "\033[0m"
 #define YELLOW "\033[33m"
 
 pthread_t temp;
-
-//Diffie-Hellman Parameters:
-const int n = 1999, g = 1777;
-int x, key;
-
-int pow2mod(int number, int power, int mod);
-string preProcessMessage(string msgRead, bool isMsgRead = false);
-void postProcessSpecialCommands(string msgRead);
-
 class client{
 	public:
 	
@@ -166,10 +157,12 @@ void *readHandler(void *arg){
                 if(item == "SUCCESS"){
                     getline(temp, item, delim);
                     cout << RED << "\t(Server): " << RESET << "Successfully Connected to Client-ID " << item << endl;
+                    cout << RED << "\t(Server): " << RESET << "Diffie-Hellman Key-Exchange-Success with public key as: " << DiffieHellmanKeyExchange(4,5).second << endl;
                 }
                 else{
                     getline(temp, item, delim);
                     cout << RED << "\t(Server): " << RESET << "Request. You are now connected to Client-ID " << item << endl;
+                    cout << RED << "\t(Server): " << RESET << "Diffie-Hellman Key-Exchange-Success with public key as: " << DiffieHellmanKeyExchange(4,5).second << endl;
                     //cout << "(user): "; // Not working
                 }
             }
