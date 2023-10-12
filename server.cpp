@@ -5,6 +5,7 @@
 #include <netinet/in.h>
 #include <pthread.h>
 #include <csignal>
+#include "Src_Code.cpp"
 using namespace std;
 #define MAX 1000
 
@@ -187,6 +188,12 @@ void *handler(void *arg){
 		}
 
 		if(status[connfd] == 1){
+			if (client.substr(0,7) == "SECURE:"){
+				string message = client.substr(8);
+				string message_temp = RC4encrypt(message);
+				logs("SEND MESSAGE", connfd);
+				s.writeClient("SEND "+ message_temp + " [" + message + ']', partner[connfd]);
+			}
 			if(client == "#GOODBYE#"){
 				// Disconnect the client (Critical Section?)
 				
